@@ -178,6 +178,7 @@ public class MediCare
         else if(searchChoice.equalsIgnoreCase("no"))
         {
             stopLoop=0;
+            System.out.println("Going back to main manue..");
         }
         //return;
         }

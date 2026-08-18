@@ -49,6 +49,10 @@ public class MediCare
         {
             searchPatientID();
         }
+        else if (manuChoice==3)
+        {
+            updateRecord();
+        }
         else if (manuChoice==6)
         {
             badslayout();
@@ -180,7 +184,6 @@ public class MediCare
         }
         //return;
         }
-        input.close();
     }
     public static void badslayout()
     {
@@ -212,32 +215,106 @@ public class MediCare
         }
         
     }
-    public void updateRecord()
+    public static void updateRecord() 
     {
-        Scanner input= new Scanner(System.in);
+        boolean foundID = false;
+        boolean loopCounter=false;
+        Scanner scanner = new Scanner(System.in);
         System.out.println("");
         System.out.println("Enter the patient's ID to Update");
-        String update=input.nextLine();
-        for (int i=0 ;i<patientsRecord.size() ;i++)
+        String update = scanner.nextLine();
+        for (int i = 0; i < patientsRecord.size(); i++) 
         {
             PatientManager patient = patientsRecord.get(i);
-            if (patient.patientID.equals(update))
+            if (patient.patientID.equals(update)) 
             {
-                System.out.println("What would you like to update?");
-                System.out.println("1: Patient's Name");
-                System.out.println("2: Patient's Surname");
-                System.out.println("3: Parient ID");
-                System.out.println("4: Patient's Age");
-                System.out.println("5: Patient's Gender");
-                System.out.println("6: Patient's Condition ");
-                System.out.println("5: Patient's Category");
+                foundID = true;
+                while(loopCounter==false)
+                {
+                    System.out.println("What would you like to update?");
+                    System.out.println("1: Patient's Name");
+                    System.out.println("2: Patient's Surname");
+                    System.out.println("3: Patient ID");
+                    System.out.println("4: Patient's Age");
+                    System.out.println("5: Patient's Gender");
+                    System.out.println("6: Patient's Condition");
+                    System.out.println("7: Patient's Category");
+                    System.out.println("");
+                    System.out.print("Enter the number of your choice: ");
+                    int updateChoice = scanner.nextInt();
+                    scanner.nextLine();
+                    // CLEAR THE BUFFER (Consumes the leftover \n from nextInt)
+                    if (updateChoice == 1) 
+                    {
+                        System.out.println("Old name: " + patient.patientName);
+                        System.out.print("New name: ");
+                        patient.patientName = scanner.nextLine(); // Now correctly waits for user input
+                    } 
+                    else if (updateChoice == 2) 
+                    {
+                        System.out.println("Old surname: " + patient.patientSurname);
+                        System.out.print("New surname: ");
+                        patient.patientSurname = scanner.nextLine();
+                    } 
+                    else if (updateChoice == 3) 
+                    {
+                        System.out.println("Old ID: " + patient.patientID);
+                        System.out.print("New ID: ");
+                        patient.patientID = scanner.nextLine();
+                    } 
+                    else if (updateChoice == 4) 
+                    {
+                        System.out.println("Old age: " + patient.age + " years");
+                        System.out.print("New age: ");
+                        patient.age = scanner.nextInt();
+                        scanner.nextLine(); // CLEAR BUFFER
+                    } 
+                    else if (updateChoice == 5) 
+                    {
+                        System.out.println("Old gender: " + patient.gender);
+                    while (true) 
+                    {
+                        System.out.println("Choose the patient's gender from the below list: ");
+                        System.out.println("1: Male");
+                        System.out.println("2: Female");
+                        System.out.print("New Gender: ");
+                        int choice = scanner.nextInt();
+                        scanner.nextLine(); // CLEAR BUFFER
+                    if (choice == 1) 
+                    {   
+                        patient.gender = "Male";
+                        break;
+                    } 
+                    else if (choice == 2) 
+                    {
+                        patient.gender = "Female";
+                        break;
+                    } 
+                    else 
+                    {
+                        System.out.println("Please choose between those 2 options");
+                    }
+                    }
+                    }
+                }
                 
-            }
-            else 
-            {
-                System.out.println("The Patient with ID " +update+ " Was not found");
+                System.out.println("\nDo you want to update again?(Yes Or No)");
+                String updatechoice=scanner.nextLine();
+                if (updatechoice.equalsIgnoreCase("yes"))
+                    {
+                        loopCounter=false;
+                    }
+                else if(updatechoice.equalsIgnoreCase("no"))
+                {
+                    loopCounter=true;
+                }
+                break; // Stop loop after patient is updated
             }
         }
-        //Testing
+        if (!foundID) 
+        {
+            System.out.println("The Patient with ID " + update + " was not found");
+        }
+
     }
 }

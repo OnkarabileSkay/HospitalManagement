@@ -2,7 +2,6 @@ package medicare;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Arrays;
 public class MediCare 
 {
     static ArrayList<PatientManager> patientsRecord = new ArrayList<>();
@@ -178,10 +177,10 @@ public class MediCare
         else if(searchChoice.equalsIgnoreCase("no"))
         {
             stopLoop=0;
-            System.out.println("Going back to main manue..");
         }
         //return;
         }
+        input.close();
     }
     public static void badslayout()
     {
@@ -211,6 +210,34 @@ public class MediCare
             }
             System.out.println(); 
         }
-    
+        
+    }
+    public void updateRecord()
+    {
+        Scanner input= new Scanner(System.in);
+        System.out.println("");
+        System.out.println("Enter the patient's ID to Update");
+        String update=input.nextLine();
+        for (int i=0 ;i<patientsRecord.size() ;i++)
+        {
+            PatientManager patient = patientsRecord.get(i);
+            if (patient.patientID.equals(update))
+            {
+                System.out.println("What would you like to update?");
+                System.out.println("1: Patient's Name");
+                System.out.println("2: Patient's Surname");
+                System.out.println("3: Parient ID");
+                System.out.println("4: Patient's Age");
+                System.out.println("5: Patient's Gender");
+                System.out.println("6: Patient's Condition ");
+                System.out.println("5: Patient's Category");
+                
+            }
+            else 
+            {
+                System.out.println("The Patient with ID " +update+ " Was not found");
+            }
+        }
+        //Testing
     }
 }

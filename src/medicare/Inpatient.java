@@ -9,14 +9,15 @@ package medicare;
  * @author EvelynP
  */
 
-public class Inpatient extends PatientManager 
+public class Inpatient extends Patient 
 {
     private String wardNum;
     private int bedNum;
 
-    // Constructor using super() to initialize inherited attributes
+    // Constructor super() to initialize inherited attributes
     public Inpatient(String name, String surname, String ID, int age, String gender, String condition, patientCategory Category, String wardNumber, int bedNumber) 
     {
+        //super() mathod to initialize inherited attributes
         super(name, surname, ID, age, gender, condition, Category);
         this.wardNum = wardNumber;
         this.bedNum = bedNumber;

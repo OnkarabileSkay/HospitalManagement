@@ -12,7 +12,7 @@ enum patientCategory
 
 public class MediCare 
 {
-    static ArrayList<PatientManager> patientsRecord = new ArrayList<>();
+    static ArrayList<Patient> patientsRecord = new ArrayList<>();
     static boolean[] bedStatus = new boolean[20];
 
     public static void main(String[] args) 
@@ -153,13 +153,14 @@ public class MediCare
                 
                 System.out.print("Enter Ward Number: ");
                 String ward = scanner.nextLine();
+                ward="1";
                 
                 int allocatedBed = allocateBed(scanner);
                 if (allocatedBed != -1) {
                     Inpatient inpatient = new Inpatient(name, surname, ID, age, gender, condition, newPatientCategory, ward, allocatedBed);
                     patientsRecord.add(inpatient);
                 } else {
-                    PatientManager patient = new PatientManager(name, surname, ID, age, gender, condition, newPatientCategory);
+                    Patient patient = new Patient(name, surname, ID, age, gender, condition, newPatientCategory);
                     patientsRecord.add(patient);
                 }
                 break;
@@ -168,7 +169,7 @@ public class MediCare
             {
                 newPatientCategory = patientCategory.Outpatient;
                 System.out.println("The patient " + name + "'s category is " + newPatientCategory);
-                PatientManager patient = new PatientManager(name, surname, ID, age, gender, condition, newPatientCategory);
+                Patient patient = new Patient(name, surname, ID, age, gender, condition, newPatientCategory);
                 patientsRecord.add(patient);
                 break;
             }
@@ -176,7 +177,7 @@ public class MediCare
             {
                 newPatientCategory = patientCategory.Emergency;
                 System.out.println("The patient " + name + "'s category is " + newPatientCategory);
-                PatientManager patient = new PatientManager(name, surname, ID, age, gender, condition, newPatientCategory);
+                Patient patient = new Patient(name, surname, ID, age, gender, condition, newPatientCategory);
                 patientsRecord.add(patient);
                 break;
             }
@@ -231,7 +232,7 @@ public class MediCare
             boolean found = false;
             for (int index = 0; index < patientsRecord.size(); index++)
             {
-                PatientManager patient = patientsRecord.get(index);
+                Patient patient = patientsRecord.get(index);
                 if (patient.patientID.equals(IDsearch))
                 {
                     System.out.println("\nPatient Found\n");
@@ -362,7 +363,7 @@ public class MediCare
         
         for (int i = 0; i < patientsRecord.size(); i++) 
         {
-            PatientManager patient = patientsRecord.get(i);
+            Patient patient = patientsRecord.get(i);
             if (patient.patientID.equals(update)) 
             {
                 foundID = true;
@@ -531,7 +532,7 @@ public class MediCare
             if (patientsRecord.get(i).patientID.equals(deleteID))
             {
                 System.out.println("\nPatient with ID '" + deleteID + "' was found!\n");
-                PatientManager patient = patientsRecord.get(i);
+                Patient patient = patientsRecord.get(i);
                 patient.displayDetails();
                 
                 patientsRecord.remove(i);
@@ -559,7 +560,7 @@ public class MediCare
             System.out.println(" List of All Registered Patients ");
             for (int i = 0; i < patientsRecord.size(); i++)
             {
-                PatientManager patient = patientsRecord.get(i);
+                Patient patient = patientsRecord.get(i);
                 System.out.println("\nPatient " + (i + 1) + " : ");
                 patient.displayDetails();
             }
@@ -585,7 +586,7 @@ public class MediCare
                     
                     if (surname1.compareToIgnoreCase(surname2) > 0) 
                     {
-                        PatientManager temp = patientsRecord.get(j);
+                        Patient temp = patientsRecord.get(j);
                         patientsRecord.set(j, patientsRecord.get(j + 1));
                         patientsRecord.set(j + 1, temp);
                     }
@@ -594,7 +595,7 @@ public class MediCare
             
             for (int i = 0; i < patientsRecord.size(); i++) 
             {
-                PatientManager patient = patientsRecord.get(i);
+                Patient patient = patientsRecord.get(i);
                 System.out.println("Patient " + (i + 1) + ": " + patient.patientSurname + ", " + patient.patientName 
                         + " | ID: " + patient.patientID + " | Category: " + patient.Category);
             }
@@ -606,7 +607,7 @@ public class MediCare
 
         for (int i = 0; i < patientsRecord.size(); i++) 
         {
-            PatientManager patient = patientsRecord.get(i);
+            Patient patient = patientsRecord.get(i);
             if (patient.Category == patientCategory.Inpatient) 
             {
                 inpatients++;

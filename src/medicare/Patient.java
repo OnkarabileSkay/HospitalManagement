@@ -1,6 +1,6 @@
 package medicare;
 
-public class PatientManager 
+public class Patient 
 {
     public String patientName;
     public String patientSurname;
@@ -11,7 +11,7 @@ public class PatientManager
     public patientCategory Category;
 
     // Constructor
-    public PatientManager(String name, String surname, String ID, int age, String gender, String condition, patientCategory Category)
+    public Patient(String name, String surname, String ID, int age, String gender, String condition, patientCategory Category)
     {
         this.patientName = name;
         this.patientSurname = surname;
@@ -22,7 +22,7 @@ public class PatientManager
         this.Category = Category;
     }
 
-    // Method to display patient details
+    // Overwrite Method to display patient details
     public void displayDetails() 
     {
         System.out.println("Name: " + patientName);

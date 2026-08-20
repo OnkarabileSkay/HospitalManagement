@@ -9,7 +9,8 @@ package medicare;
  * @author EvelynP
  */
 
-public class Inpatient extends Patient 
+public class Inpatient extends Patient
+        
 {
     private String wardNum;
     private int bedNum;

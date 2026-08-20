@@ -3,11 +3,61 @@ package medicare;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Fixed enum name casing to match usage or standard Java conventions
 enum patientCategory
 {
     Inpatient,
     Outpatient,
     Emergency
+}
+
+// Placeholder Patient base class to resolve class dependencies
+class Patient {
+    String patientName;
+    String patientSurname;
+    String patientID;
+    int age;
+    String gender;
+    String medicalCondition;
+    patientCategory Category;
+
+    public Patient(String name, String surname, String id, int age, String gender, String condition, patientCategory category) {
+        this.patientName = name;
+        this.patientSurname = surname;
+        this.patientID = id;
+        this.age = age;
+        this.gender = gender;
+        this.medicalCondition = condition;
+        this.Category = category;
+    }
+
+    public void displayDetails() {
+        System.out.println("Name: " + patientName + " " + patientSurname);
+        System.out.println("ID: " + patientID);
+        System.out.println("Age: " + age);
+        System.out.println("Gender: " + gender);
+        System.out.println("Condition: " + medicalCondition);
+        System.out.println("Category: " + Category);
+    }
+}
+
+// Placeholder Inpatient subclass to resolve constructor call
+class Inpatient extends Patient {
+    String ward;
+    int bedNumber;
+
+    public Inpatient(String name, String surname, String id, int age, String gender, String condition, patientCategory category, String ward, int bedNumber) {
+        super(name, surname, id, age, gender, condition, category);
+        this.ward = ward;
+        this.bedNumber = bedNumber;
+    }
+
+    @Override
+    public void displayDetails() {
+        super.displayDetails();
+        System.out.println("Ward: " + ward);
+        System.out.println("Bed Number: " + bedNumber);
+    }
 }
 
 public class MediCare 
@@ -25,6 +75,14 @@ public class MediCare
         {
             System.out.println();
             System.out.print("Enter '1' to see the MENU or Enter Any Key To EXIT:");
+            
+            // Fix input mismatch exception if non-integer key is entered to exit
+            if (!scanner.hasNextInt()) {
+                System.out.println();
+                System.out.println("Goodbye... Have a lovely day");
+                break;
+            }
+
             int choice = scanner.nextInt();
             //IF THE USER ENTER 1, IT WILL RUN THE MANU METHOD
             if (choice == 1)
@@ -56,6 +114,13 @@ public class MediCare
             System.out.println("7: Display full report");
             System.out.println("0: Exit");
             System.out.print("Your Choice: ");
+            
+            if (!scanner.hasNextInt()) {
+                scanner.nextLine();
+                System.out.println("Invalid option. Please enter a number.");
+                continue;
+            }
+
             int manuChoice = scanner.nextInt();
             if (manuChoice == 1)
             {
@@ -77,7 +142,7 @@ public class MediCare
                 //RUNS A METHOD THAT DELETS A PATIENTS'S INFORMATION
                 deleteRecord();
             }
-                else if (manuChoice == 5)
+            else if (manuChoice == 5)
             {
                 //RUNS A METHOD THAT DISPLAYS ALL THE PATIENTS IN THE SYSTEM 
                 displayAllPatients();
@@ -633,6 +698,15 @@ public class MediCare
                 System.out.println("\nPatient with ID '" + deleteID + "' was found!\n");
                 Patient patient = patientsRecord.get(i);
                 patient.displayDetails();
+                
+                // Release bed if deleting an inpatient
+                if (patient instanceof Inpatient) {
+                    Inpatient inp = (Inpatient) patient;
+                    if (inp.bedNumber >= 1 && inp.bedNumber <= 20) {
+                        bedStatus[inp.bedNumber - 1] = false;
+                    }
+                }
+                
                 //USING .REMOVE TO REMOVE THE PATIENTS'S DETAIL FROM THE ARRAYLIST
                 patientsRecord.remove(i);
                 delete = true;

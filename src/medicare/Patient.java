@@ -88,4 +88,9 @@ public class Patient
     { 
         this.medicalCondition = medicalCondition; 
     }
+    //FOR UNIT TEST
+    public String getSurname() 
+    {
+    return patientSurname;
+    }
 }

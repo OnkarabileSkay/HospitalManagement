@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package medicare;
 
-/**
- *
- * @author EvelynP
- */
 public class PatientManager 
 {
     public String patientName;
@@ -17,17 +9,31 @@ public class PatientManager
     public String gender;
     public String medicalCondition;
     public patientCategory Category;
-    //Constructor
+
+    // Constructor
     public PatientManager(String name, String surname, String ID, int age, String gender, String condition, patientCategory Category)
     {
-        this.patientName=name;
-        this.patientSurname=surname;
-        this.patientID=ID;
-        this.age=age;
-        this.gender=gender;
-        this.medicalCondition=condition;
-        this.Category=Category;
+        this.patientName = name;
+        this.patientSurname = surname;
+        this.patientID = ID;
+        this.age = age;
+        this.gender = gender;
+        this.medicalCondition = condition;
+        this.Category = Category;
     }
+
+    // Method to display patient details
+    public void displayDetails() 
+    {
+        System.out.println("Name: " + patientName);
+        System.out.println("Surname: " + patientSurname);
+        System.out.println("ID: " + patientID);
+        System.out.println("Age: " + age);
+        System.out.println("Gender: " + gender);
+        System.out.println("Condition: " + medicalCondition);
+        System.out.println("Category: " + Category);
+    }
+
     // Getters and Setters
     public String getPatientID() 
     { 
@@ -82,5 +88,4 @@ public class PatientManager
     { 
         this.medicalCondition = medicalCondition; 
     }
-    
 }

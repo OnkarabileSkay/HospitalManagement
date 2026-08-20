@@ -1,21 +1,18 @@
 package medicare;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 enum patientCategory
 {
-    Inpaitent,
-    OutPaitent,
-    Emegency
+    Inpatient,
+    Outpatient,
+    Emergency
 }
 
 public class MediCare 
 {
     static ArrayList<PatientManager> patientsRecord = new ArrayList<>();
-    
-    // Track 20 beds (false = available, true = occupied [In Use])
     static boolean[] bedStatus = new boolean[20];
 
     public static void main(String[] args) 
@@ -25,8 +22,13 @@ public class MediCare
         System.out.println("Welcome to MediCare Hospital");
         while (true)
         {
-            System.out.println("");
+            System.out.println();
             System.out.print("Enter '1' to see the MENU or Enter Any Key To EXIT:");
+            if (!scanner.hasNextInt())
+            {
+                System.out.println("\nGoodbye... Have a lovely day");
+                break;
+            }
             int choice = scanner.nextInt();
             if (choice == 1)
             {
@@ -36,7 +38,7 @@ public class MediCare
             else
             { 
                 System.out.println("");
-                System.out.println("Goodbay... Have a lovely day");
+                System.out.println("Goodbye... Have a lovely day");
                 break;
             }
         }
@@ -50,14 +52,15 @@ public class MediCare
         System.out.println("3: Update an existing patient's details");
         System.out.println("4: Delete a patient's record");
         System.out.println("5: Display all registered patients");
-        System.out.println("6: Display all bads");
+        System.out.println("6: Display all beds");
+        System.out.println("7: Display full report");
         System.out.println("0: Exit");
-        System.out.print("You Choice:");
+        System.out.print("Your Choice: ");
         int manuChoice = scanner.nextInt();
         if (manuChoice == 1)
         {
             register(scanner);
-            System.out.println("\nThe Patient is Succesfully added");
+            System.out.println("\nThe Patient is Successfully added");
         }
         else if (manuChoice == 2)
         {
@@ -79,28 +82,34 @@ public class MediCare
         {
             badslayout();
         }
+        else if (manuChoice == 7)
+        {
+            displayReport();
+        }
+        else if (manuChoice == 0)
+        {
+            System.out.println("Returning to Home...");
+        }
     }
 
     public static void register(Scanner scanner)
     {
         System.out.println("");
-        String category = " ";
         scanner.nextLine();
-        System.out.println("");
         System.out.println("Registering a new Patient");
         System.out.print("Enter the Name of the patient: ");
         String name = scanner.nextLine();
-        System.out.print("Enter the Patients's Surname: ");
+        System.out.print("Enter the Patient's Surname: ");
         String surname = scanner.nextLine();
-        System.out.print("Enter the Patients's ID number: ");
+        System.out.print("Enter the Patient's ID number: ");
         String ID = scanner.nextLine();
         String gender = "";
         while (true)
         {
             System.out.println("Choose the patient's gender from the below list: ");
             System.out.println("1: Male");
-            System.out.println("2: Femal");
-            System.out.print("You Choice:");
+            System.out.println("2: Female");
+            System.out.print("Your Choice: ");
             int choice = scanner.nextInt();
             if (choice == 1)
             {
@@ -123,50 +132,62 @@ public class MediCare
         System.out.print("Enter the patient's age: ");
         int age = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("Enter the patients's medical problem:");
+        System.out.println("Enter the patient's medical problem:");
         String condition = scanner.nextLine();
-        patientCategory newPatient = null;
+        patientCategory newPatientCategory = null;
+        
         while (true)
         {
-            System.out.println("Choose the following options for the patients catagory: ");
+            System.out.println("Choose the following options for the patient category: ");
             System.out.println("1: Inpatient");
             System.out.println("2: Outpatient");
-            System.out.println("3: Emergancy");
+            System.out.println("3: Emergency");
             System.out.print("Enter the option: ");
-            int catagoryOption = scanner.nextInt();
-            if (catagoryOption == 1)
+            int categoryOption = scanner.nextInt();
+            scanner.nextLine();
+            
+            if (categoryOption == 1)
             {
-                newPatient = patientCategory.Inpaitent;
-                System.out.println("The patient " + name + "'s catagory is " + newPatient);
+                newPatientCategory = patientCategory.Inpatient;
+                System.out.println("The patient " + name + "'s category is " + newPatientCategory);
                 
-                // Assign a bed if Inpatient
-                allocateBed(scanner);
+                System.out.print("Enter Ward Number: ");
+                String ward = scanner.nextLine();
+                
+                int allocatedBed = allocateBed(scanner);
+                if (allocatedBed != -1) {
+                    Inpatient inpatient = new Inpatient(name, surname, ID, age, gender, condition, newPatientCategory, ward, allocatedBed);
+                    patientsRecord.add(inpatient);
+                } else {
+                    PatientManager patient = new PatientManager(name, surname, ID, age, gender, condition, newPatientCategory);
+                    patientsRecord.add(patient);
+                }
                 break;
             }
-            else if (catagoryOption == 2)
+            else if (categoryOption == 2)
             {
-                newPatient = patientCategory.OutPaitent;
-                System.out.println("The patient " + name + "'s catagory is " + newPatient);
+                newPatientCategory = patientCategory.Outpatient;
+                System.out.println("The patient " + name + "'s category is " + newPatientCategory);
+                PatientManager patient = new PatientManager(name, surname, ID, age, gender, condition, newPatientCategory);
+                patientsRecord.add(patient);
                 break;
             }
-            else if (catagoryOption == 3)
+            else if (categoryOption == 3)
             {
-                newPatient = patientCategory.Emegency;
-                System.out.println("The patient " + name + "'s catagory is " + newPatient);
+                newPatientCategory = patientCategory.Emergency;
+                System.out.println("The patient " + name + "'s category is " + newPatientCategory);
+                PatientManager patient = new PatientManager(name, surname, ID, age, gender, condition, newPatientCategory);
+                patientsRecord.add(patient);
                 break;
             }
             else
             {
-                System.out.println("Please Enter only one option between those 3 only");
+                System.out.println("Please enter an option between 1 and 3.");
             }
         }
-        
-        PatientManager patient = new PatientManager(name, surname, ID, age, gender, condition, newPatient);
-        patientsRecord.add(patient);
     }
 
-    // Helper method to allocate an available bed to an Inpatient
-    private static void allocateBed(Scanner scanner) {
+    private static int allocateBed(Scanner scanner) {
         boolean availableFound = false;
         for (boolean status : bedStatus) {
             if (!status) {
@@ -177,19 +198,19 @@ public class MediCare
 
         if (!availableFound) {
             System.out.println("No beds are available for allocation.");
-            return;
+            return -1;
         }
 
         while (true) {
             System.out.print("Enter Bed Number to allocate (1 to 20): ");
-            int bNum = scanner.nextInt();
-            if (bNum >= 1 && bNum <= 20) {
-                if (!bedStatus[bNum - 1]) {
-                    bedStatus[bNum - 1] = true;
-                    System.out.println("Bed B" + String.format("%02d", bNum) + " allocated successfully.");
-                    break;
+            int bedNum = scanner.nextInt();
+            if (bedNum >= 1 && bedNum <= 20) {
+                if (!bedStatus[bedNum - 1]) {
+                    bedStatus[bedNum - 1] = true;
+                    System.out.println("Bed B" + String.format("%02d", bedNum) + " allocated successfully.");
+                    return bedNum;
                 } else {
-                    System.out.println("Bed B" + String.format("%02d", bNum) + " is already occupied. Choose another.");
+                    System.out.println("Bed B" + String.format("%02d", bedNum) + " is already occupied. Choose another.");
                 }
             } else {
                 System.out.println("Invalid bed number. Choose between 1 and 20.");
@@ -203,10 +224,9 @@ public class MediCare
         int stopLoop = 1;
         while(stopLoop != 0)
         {
-            System.out.println("");
-            System.out.println("");
-            System.out.println("Searcing a patient");
-            System.out.print("Enter the patient's ID to search for:");
+            System.out.println();
+            System.out.println("Searching a patient");
+            System.out.print("Enter the patient's ID to search for: ");
             String IDsearch = input.nextLine();
             boolean found = false;
             for (int index = 0; index < patientsRecord.size(); index++)
@@ -214,23 +234,17 @@ public class MediCare
                 PatientManager patient = patientsRecord.get(index);
                 if (patient.patientID.equals(IDsearch))
                 {
-                    System.out.println("\nPatient Found");
-                    System.out.println("Name: " + patient.patientName); 
-                    System.out.println("Surname: " + patient.patientSurname);
-                    System.out.println("ID: " + patient.patientID);
-                    System.out.println("Age: " + patient.age);
-                    System.out.println("Gender: " + patient.gender);
-                    System.out.println("Condition: " + patient.medicalCondition);
-                    System.out.println("Category: " + patient.Category);
+                    System.out.println("\nPatient Found\n");
+                    patient.displayDetails();
                     found = true;
                     break;
                 }
             }
             if (!found)
             {
-                System.out.println("\nPatient with an id ' " + IDsearch + " ' was not found on our hospital");
+                System.out.println("\nPatient with ID '" + IDsearch + "' was not found in our hospital.");
             }
-            System.out.println("\nDo you want to search again?(Yes Or No)");
+            System.out.println("\nDo you want to search again? (Yes Or No)");
             String searchChoice = input.nextLine();
             if (searchChoice.equalsIgnoreCase("yes"))
             {
@@ -276,7 +290,7 @@ public class MediCare
         System.out.println("\nOptions:");
         System.out.println("1: Display Available Beds");
         System.out.println("2: Display Occupied Beds");
-        System.out.println("0: Return To Main Manu");
+        System.out.println("0: Return To Main Menu");
         System.out.print("Enter Choice: ");
         int option = scanner.nextInt();
 
@@ -284,19 +298,19 @@ public class MediCare
         {
             int totalAvailable = 0;
             int bedIndex = 0;
-            System.out.println("\n Available Beds");
+            System.out.println("\nAvailable Beds");
             for (int r = 0; r < 4; r++)
             {
                 for (int c = 0; c < 5; c++)
                 {
                     if (!bedStatus[bedIndex]) 
-                    { // Bed is available
+                    {
                         System.out.print(badLyout[r][c] + " ");
                         totalAvailable++;
                     } 
                     else 
                     {
-                        System.out.print("[In Use]"); // Hide occupied bed number
+                        System.out.print("[Use] ");
                     }
                     bedIndex++;
                 }
@@ -308,19 +322,19 @@ public class MediCare
         {
             int totalOccupied = 0;
             int bedIndex = 0;
-            System.out.println("\n Occupied Beds");
+            System.out.println("\nOccupied Beds");
             for (int r = 0; r < 4; r++)
             {
                 for (int c = 0; c < 5; c++)
                 {
                     if (bedStatus[bedIndex]) 
-                    { // Bed is occupied
-                        System.out.print("[In Use] ");
+                    {
+                        System.out.print("[Use] ");
                         totalOccupied++;
                     } 
                     else 
                     {
-                        System.out.print(" [-----] "); // Hide available bed number
+                        System.out.print("[---] ");
                     }
                     bedIndex++;
                 }
@@ -328,9 +342,9 @@ public class MediCare
             }
             System.out.println("\nTotal beds in use: " + totalOccupied);
         }
-        else if(option==0)
+        else if(option == 0)
         {
-            System.out.println("");
+            System.out.println();
         }
         else
         {
@@ -342,8 +356,8 @@ public class MediCare
     {
         boolean foundID = false;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("");
-        System.out.println("Enter the patient's ID to Update:");
+        System.out.println();
+        System.out.print("Enter the patient's ID to Update: ");
         String update = scanner.nextLine();
         
         for (int i = 0; i < patientsRecord.size(); i++) 
@@ -354,13 +368,7 @@ public class MediCare
                 foundID = true;
                 System.out.println("\nPatient Found");
                 System.out.println("\nCurrent Details");
-                System.out.println("Name: " + patient.patientName); 
-                System.out.println("Surname: " + patient.patientSurname);
-                System.out.println("ID: " + patient.patientID);
-                System.out.println("Age: " + patient.age);
-                System.out.println("Gender: " + patient.gender);
-                System.out.println("Condition: " + patient.medicalCondition);
-                System.out.println("Category: " + patient.Category);
+                patient.displayDetails();
                 
                 boolean loopCounter = false;
                 while (!loopCounter)
@@ -378,41 +386,37 @@ public class MediCare
                     
                     if (!scanner.hasNextInt()) {
                         System.out.println("Invalid input. Please enter a number.");
-                        scanner.nextLine(); // Clear invalid token
+                        scanner.nextLine();
                         continue;
                     }
                     
                     int updateChoice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline character
+                    scanner.nextLine();
 
                     if (updateChoice == 1) 
                     {
-                        System.out.println("");
-                        System.out.println("Old name: " + patient.patientName);
+                        System.out.println("\nOld name: " + patient.patientName);
                         System.out.print("New name: ");
                         patient.patientName = scanner.nextLine();
                         System.out.println("\nUpdate successfully captured.");
                     } 
                     else if (updateChoice == 2) 
                     {
-                        System.out.println("");
-                        System.out.println("Old surname: " + patient.patientSurname);
+                        System.out.println("\nOld surname: " + patient.patientSurname);
                         System.out.print("New surname: ");
                         patient.patientSurname = scanner.nextLine();
                         System.out.println("\nUpdate successfully captured.");
                     } 
                     else if (updateChoice == 3) 
                     {
-                        System.out.println("");
-                        System.out.println("Old ID: " + patient.patientID);
+                        System.out.println("\nOld ID: " + patient.patientID);
                         System.out.print("New ID: ");
                         patient.patientID = scanner.nextLine();
                         System.out.println("\nUpdate successfully captured.");
                     } 
                     else if (updateChoice == 4) 
                     {
-                        System.out.println("");
-                        System.out.println("Old age: " + patient.age + " years");
+                        System.out.println("\nOld age: " + patient.age + " years");
                         System.out.print("New age: ");
                         patient.age = scanner.nextInt();
                         scanner.nextLine();
@@ -429,7 +433,6 @@ public class MediCare
                             System.out.print("New Gender: ");
                             int choice = scanner.nextInt();
                             scanner.nextLine();
-                            System.out.println("");
                             if (choice == 1) 
                             {   
                                 patient.gender = "Male";
@@ -450,8 +453,7 @@ public class MediCare
                     }
                     else if (updateChoice == 6)
                     {
-                        System.out.println("");
-                        System.out.println("Old Condition: " + patient.medicalCondition);
+                        System.out.println("\nOld Condition: " + patient.medicalCondition);
                         System.out.print("New Condition: ");
                         patient.medicalCondition = scanner.nextLine();
                         System.out.println("\nUpdate successfully captured.");
@@ -469,19 +471,19 @@ public class MediCare
                             scanner.nextLine();
                             if (catagoryOption == 1)
                             {
-                                patient.Category = patientCategory.Inpaitent;
+                                patient.Category = patientCategory.Inpatient;
                                 System.out.println("\nUpdate successfully captured.");
                                 break;
                             }
                             else if (catagoryOption == 2)
                             {
-                                patient.Category = patientCategory.OutPaitent;
+                                patient.Category = patientCategory.Outpatient;
                                 System.out.println("\nUpdate successfully captured.");
                                 break;
                             }
                             else if (catagoryOption == 3)
                             {
-                                patient.Category = patientCategory.Emegency;
+                                patient.Category = patientCategory.Emergency;
                                 System.out.println("\nUpdate successfully captured.");
                                 break;
                             }
@@ -503,13 +505,7 @@ public class MediCare
                     {
                         loopCounter = true;
                         System.out.println("\nNew Details:");
-                        System.out.println("Name: " + patient.patientName); 
-                        System.out.println("Surname: " + patient.patientSurname);
-                        System.out.println("ID: " + patient.patientID);
-                        System.out.println("Age: " + patient.age);
-                        System.out.println("Gender: " + patient.gender);
-                        System.out.println("Condition: " + patient.medicalCondition);
-                        System.out.println("Category: " + patient.Category);
+                        patient.displayDetails();
                         System.out.println("\nReturning To Main Menu");
                     }
                 }
@@ -525,31 +521,27 @@ public class MediCare
     public static void deleteRecord()
     {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("");
+        System.out.println();
         System.out.print("Enter the patient's ID to delete: ");
         String deleteID = scanner.nextLine();
-        boolean removed = false;
+        boolean delete = false;
 
         for (int i = 0; i < patientsRecord.size(); i++)
         {
             if (patientsRecord.get(i).patientID.equals(deleteID))
             {
+                System.out.println("\nPatient with ID '" + deleteID + "' was found!\n");
                 PatientManager patient = patientsRecord.get(i);
-                System.out.println("Name: " + patient.patientName);
-                System.out.println("Surname: " + patient.patientSurname);
-                System.out.println("ID: " + patient.patientID);
-                System.out.println("Age: " + patient.age);
-                System.out.println("Gender: " + patient.gender);
-                System.out.println("Condition: " + patient.medicalCondition);
-                System.out.println("Category: " + patient.Category);
+                patient.displayDetails();
+                
                 patientsRecord.remove(i);
-                removed = true;
+                delete = true;
                 System.out.println("\nPatient record with ID '" + deleteID + "' successfully deleted.");
                 break;
             }
         }
 
-        if (!removed)
+        if (!delete)
         {
             System.out.println("\nPatient with ID '" + deleteID + "' was not found.");
         }
@@ -557,10 +549,10 @@ public class MediCare
 
     public static void displayAllPatients()
     {
-        System.out.println("");
+        System.out.println();
         if (patientsRecord.isEmpty())
         {
-            System.out.println("No patients currently registered in our hopital.");
+            System.out.println("No patients currently registered in our hospital.");
         }
         else
         {
@@ -569,14 +561,87 @@ public class MediCare
             {
                 PatientManager patient = patientsRecord.get(i);
                 System.out.println("\nPatient " + (i + 1) + " : ");
-                System.out.println("Name: " + patient.patientName);
-                System.out.println("Surname: " + patient.patientSurname);
-                System.out.println("ID: " + patient.patientID);
-                System.out.println("Age: " + patient.age);
-                System.out.println("Gender: " + patient.gender);
-                System.out.println("Condition: " + patient.medicalCondition);
-                System.out.println("Category: " + patient.Category);
+                patient.displayDetails();
             }
         }
+    }
+
+    public static void displayReport()
+    {
+        System.out.println("\nMEDICARE HOSPITAL FULL REPORT");
+        System.out.println("\nPATIENT REPORT");
+        if (patientsRecord.isEmpty()) 
+        {
+            System.out.println("No patients currently registered.");
+        } 
+        else 
+        {
+            for (int i = 0; i < patientsRecord.size() - 1; i++) 
+            {
+                for (int j = 0; j < patientsRecord.size() - i - 1; j++) 
+                {
+                    String surname1 = patientsRecord.get(j).patientSurname;
+                    String surname2 = patientsRecord.get(j + 1).patientSurname;
+                    
+                    if (surname1.compareToIgnoreCase(surname2) > 0) 
+                    {
+                        PatientManager temp = patientsRecord.get(j);
+                        patientsRecord.set(j, patientsRecord.get(j + 1));
+                        patientsRecord.set(j + 1, temp);
+                    }
+                }
+            }
+            
+            for (int i = 0; i < patientsRecord.size(); i++) 
+            {
+                PatientManager patient = patientsRecord.get(i);
+                System.out.println("Patient " + (i + 1) + ": " + patient.patientSurname + ", " + patient.patientName 
+                        + " | ID: " + patient.patientID + " | Category: " + patient.Category);
+            }
+        }
+
+        int inpatients = 0;
+        int outpatients = 0;
+        int emergency = 0;
+
+        for (int i = 0; i < patientsRecord.size(); i++) 
+        {
+            PatientManager patient = patientsRecord.get(i);
+            if (patient.Category == patientCategory.Inpatient) 
+            {
+                inpatients++;
+            } 
+            else if (patient.Category == patientCategory.Outpatient) 
+            {
+                outpatients++;
+            } 
+            else if (patient.Category == patientCategory.Emergency) 
+            {
+                emergency++;
+            }
+        }
+
+        System.out.println("\nCategory Total:");
+        System.out.println("1: Total Registered Patients : " + patientsRecord.size());
+        System.out.println("2: Inpatients: " + inpatients);
+        System.out.println("3: Outpatients: " + outpatients);
+        System.out.println("4: Emergency: " + emergency);
+        int bedsOccupied = 0;
+        for (int i = 0; i < bedStatus.length; i++) 
+        {
+            if (bedStatus[i]) 
+            {
+                bedsOccupied++;
+            }
+        }
+        int totalBeds = bedStatus.length;
+        int bedsAvailable = totalBeds - bedsOccupied;
+        double occupancyPercentage = ((double) bedsOccupied / totalBeds) * 100;
+
+        System.out.println("\n WARD BED REPORT");
+        System.out.println("1: Total Beds : " + totalBeds);
+        System.out.println("2: Beds Occupied : " + bedsOccupied);
+        System.out.println("3: Beds Available : " + bedsAvailable);
+        System.out.printf("4: Occupancy Percentage: %.2f%%\n", occupancyPercentage);
     }
 }

@@ -25,19 +25,25 @@ jobs:
 
     - name: Download JUnit & Hamcrest JARs
       run: |
-        mkdir -p lib
+        mkdir -p lib build/classes build/test/classes build/test/results
         curl -sL -o lib/junit-4.13.2.jar https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
         curl -sL -o lib/hamcrest-core-1.3.jar https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
 
-    - name: Compile and Test
+    - name: Compile Java Files
       run: |
-        mkdir -p build/classes build/test/classes test-results
         javac -cp "lib/*" -d build/classes $(find src -name "*.java")
         javac -cp "build/classes:lib/*" -d build/test/classes $(find test -name "*.java")
+
+    - name: Run JUnit Tests & Generate XML
+      run: |
         java -cp "build/classes:build/test/classes:lib/*" org.junit.runner.JUnitCore medicare.HospitalManagementSystemTest
+
+    - name: Run Ant Test Target
+      run: |
+        ant test -Dlibs.junit_4.classpath="lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar" -Djavac.classpath="build/classes" || true
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
-        files: "test-results/**/*.xml"
+        files: "**/TEST-*.xml"

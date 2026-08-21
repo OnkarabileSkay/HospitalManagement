@@ -38,7 +38,7 @@ public class HospitalManagementSystemTest {
 
         Patient found = null;
         for (Patient p : MediCare.patientsRecord) {
-            if (p.getPatientID().equalsIgnoreCase("P102")) {
+            if (p.getPatientID().equalsIgnoreCase("P106")) {
                 found = p;
                 break;
             }

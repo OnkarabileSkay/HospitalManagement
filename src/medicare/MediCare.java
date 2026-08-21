@@ -10,7 +10,7 @@ enum patientCategory
 public class MediCare 
 {
     static ArrayList<Patient> patientsRecord = new ArrayList<>();
-    static boolean[] bedStatus = new boolean[20];
+    static boolean[] beds = new boolean[20];
     public static void main(String[] args) 
     {
         Scanner scanner = new Scanner(System.in);
@@ -97,7 +97,7 @@ public class MediCare
         }
     }
    // Helper method to check if a patient ID already exists in the system
-    public static boolean isDuplicateID(String ID)
+    public static boolean DuplicateID(String ID)
     {
         for (Patient patient : patientsRecord)
         {
@@ -127,7 +127,7 @@ public class MediCare
                 System.out.print("Enter the Patient's ID number: ");
                 ID = scanner.nextLine();
                 //IF STATEMENT THAT CHEACKS IF THE ENTERD ID IS A DUPLICATE OR NOT
-                if (isDuplicateID(ID))
+                if (DuplicateID(ID))
                 {
                     System.out.println("A patient with ID '" + ID + "' already exists. Please enter another ID");
                     System.out.println();
@@ -166,7 +166,7 @@ public class MediCare
             System.out.print("Enter the patient's age: ");
             int age = scanner.nextInt();
             scanner.nextLine();
-            System.out.println("Enter the patient's medical problem:");
+            System.out.println("Enter the patient's medical condition:");
             String condition = scanner.nextLine();
             patientCategory newPatientCategory = null;
             //LOOP THAT MAKES SURE THAT USER CHOOSE ONE CATEGORY FOR THE PATIENT
@@ -247,16 +247,16 @@ public class MediCare
     //METHOD THAT ALLOCATE BEDS TO INPATIENTS
     private static int allocateBed(Scanner scanner) 
     {
-        boolean availableFound = false;
-        for (boolean status : bedStatus) 
+        boolean availableBed = false;
+        for (boolean status : beds) 
         {
             if (!status) 
             {
-                availableFound = true;
+                availableBed = true;
                 break;
             }
         }
-        if (!availableFound) 
+        if (!availableBed) 
         {
             System.out.println();
             System.out.println("No beds are available for allocation.");
@@ -269,9 +269,9 @@ public class MediCare
             int bedNum = scanner.nextInt();
             if (bedNum >= 1 && bedNum <= 20) 
             {
-                if (!bedStatus[bedNum - 1]) 
+                if (!beds[bedNum - 1]) 
                 {
-                    bedStatus[bedNum - 1] = true;
+                    beds[bedNum - 1] = true;
                     System.out.println("Bed B" + String.format("%02d", bedNum) + " allocated successfully.");
                     return bedNum;
                 } 
@@ -372,7 +372,7 @@ public class MediCare
             {
                 for (int c = 0; c < 5; c++)
                 {
-                    if (!bedStatus[bedIndex]) 
+                    if (!beds[bedIndex]) 
                     {
                         System.out.print(badLyout[r][c] + " ");
                         totalAvailable++;
@@ -396,7 +396,7 @@ public class MediCare
             {
                 for (int c = 0; c < 5; c++)
                 {
-                    if (bedStatus[bedIndex]) 
+                    if (beds[bedIndex]) 
                     {
                         System.out.print("[Use] ");
                         totalOccupied++;
@@ -476,7 +476,7 @@ public class MediCare
                             System.out.print("New ID: ");
                             String newID = scanner.nextLine();
                             //IF STATEMENT THAT RESTRICTS THE USER TO PROVIDE DUPLICATE IDS
-                            if (!newID.equalsIgnoreCase(patient.patientID) && isDuplicateID(newID))
+                            if (!newID.equalsIgnoreCase(patient.patientID) && DuplicateID(newID))
                             {
                                 System.out.println("Patient ID '" + newID + "' has already assigned to another patient, Use another id");
                             }
@@ -775,14 +775,14 @@ public class MediCare
             System.out.println("3: Outpatients: " + outpatients);
             System.out.println("4: Emergency: " + emergency);
             int bedsInUse = 0;
-            for (int i = 0; i < bedStatus.length; i++) 
+            for (int i = 0; i < beds.length; i++) 
             {
-                if (bedStatus[i]) 
+                if (beds[i]) 
                 {
                     bedsInUse++;
                 }
             }
-            int totalBeds = bedStatus.length;
+            int totalBeds = beds.length;
             int bedsAvailable = totalBeds - bedsInUse;
             double percentage = ((double) bedsInUse / totalBeds) * 100;
             System.out.println("\nWARD BED REPORT");

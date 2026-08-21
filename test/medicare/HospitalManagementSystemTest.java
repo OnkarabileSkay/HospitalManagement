@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.Collections;
 import java.util.Comparator;
+import static medicare.MediCare.beds;
 
 import static org.junit.Assert.*;
 
@@ -13,8 +14,8 @@ public class HospitalManagementSystemTest {
     public void setUp() {
         // Reset patient records and bed statuses before each test
         MediCare.patientsRecord.clear();
-        for (int i = 0; i < MediCare.bedStatus.length; i++) {
-            MediCare.bedStatus[i] = false;
+        for (int i = 0; i < MediCare.beds.length; i++) {
+            MediCare.beds[i] = false;
         }
     }
 
@@ -75,9 +76,9 @@ public class HospitalManagementSystemTest {
     public void testAllocateBed() {
         Inpatient in = new Inpatient("Jane", "Smith", "P105", 45, "Female", "Fracture", patientCategory.Inpatient, "Ward A", 1);
         MediCare.patientsRecord.add(in);
-        MediCare.bedStatus[in.getBedNumber() - 1] = true;
+        MediCare.beds[in.getBedNumber() - 1] = true;
 
-        assertTrue(MediCare.bedStatus[0]);
+        assertTrue(MediCare.beds[0]);
     }
 
     // 6. Release a bed
@@ -85,12 +86,12 @@ public class HospitalManagementSystemTest {
     public void testReleaseBed() {
         Inpatient in = new Inpatient("Jane", "Smith", "P106", 45, "Female", "Fracture", patientCategory.Inpatient, "Ward A", 1);
         MediCare.patientsRecord.add(in);
-        MediCare.bedStatus[0] = true;
+        MediCare.beds[0] = true;
 
         // Release the bed
-        MediCare.bedStatus[in.getBedNumber() - 1] = false;
+        MediCare.beds[in.getBedNumber() - 1] = false;
 
-        assertFalse(MediCare.bedStatus[0]);
+        assertFalse(MediCare.beds[0]);
     }
 
     // 7. Prevent duplicate Patient IDs
@@ -115,10 +116,10 @@ public class HospitalManagementSystemTest {
     // 8. Prevent allocating an occupied bed
     @Test
     public void testPreventAllocatingOccupiedBed() {
-        MediCare.bedStatus[0] = true; // Bed 1 is already occupied
+        MediCare.beds[0] = true; // Bed 1 is already occupied
 
         int requestedBed = 1;
-        boolean canAllocate = !MediCare.bedStatus[requestedBed - 1];
+        boolean canAllocate = !MediCare.beds[requestedBed - 1];
 
         assertFalse("Cannot allocate bed 1 as it is already occupied", canAllocate);
     }
@@ -127,12 +128,12 @@ public class HospitalManagementSystemTest {
     @Test
     public void testPreventBedAllocationWhenAllBedsOccupied() {
         // Mark all beds as occupied
-        for (int i = 0; i < MediCare.bedStatus.length; i++) {
-            MediCare.bedStatus[i] = true;
+        for (int i = 0; i < MediCare.beds.length; i++) {
+            MediCare.beds[i] = true;
         }
 
         boolean hasAvailableBed = false;
-        for (boolean status : MediCare.bedStatus) {
+        for (boolean status : MediCare.beds) {
             if (!status) {
                 hasAvailableBed = true;
                 break;

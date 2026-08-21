@@ -339,7 +339,7 @@ public class MediCare
                 numbers = numbers + 1;
                 if (numbers < 10)
                 {
-                    badLyout[a][i] = "B0" + numbers; 
+                    badLyout[a][i] = "B0" + numbers;
                 } 
                 else 
                 {

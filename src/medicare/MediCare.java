@@ -229,7 +229,7 @@ public class MediCare
                     System.out.println("Please enter an option between 1 and 3.");
                 }
             }
-            //IT ENABLE THE USER TO ADD ANOTHER PATIENT WITJOUD GOING BACK TO MAIN MANU
+            //IT ENABLE THE USER TO ADD ANOTHER PATIENT WITHOUT GOING BACK TO MAIN MANU
             System.out.println("Do you want to register another Patient? (yes or no)");
             String loopAnswer=scanner.nextLine();
                 if (loopAnswer.equalsIgnoreCase("yes"))
@@ -439,7 +439,7 @@ public class MediCare
                 System.out.println("\nCurrent Details");
                 patient.displayDetails();
                 boolean loopCounter = false;
-                while (!loopCounter)
+                while (loopCounter==false)
                 {
                     //IT ALLOWS THE USER TO CHOSE WHAT THEY WANT TO CHANGE 
                     System.out.println("\nWhat would you like to update?");
@@ -452,11 +452,6 @@ public class MediCare
                     System.out.println("7: Patient's Category");
                     System.out.println("0: Return to Main Menu");
                     System.out.print("Enter the number of your choice: ");
-                    if (!scanner.hasNextInt()) {
-                        System.out.println("Invalid input. Please enter a number.");
-                        scanner.nextLine();
-                        continue;
-                    }
                     int updateChoice = scanner.nextInt();
                     scanner.nextLine();
                     if (updateChoice == 1) 
@@ -483,7 +478,7 @@ public class MediCare
                             //IF STATEMENT THAT RESTRICTS THE USER TO PROVIDE DUPLICATE IDS
                             if (!newID.equalsIgnoreCase(patient.patientID) && isDuplicateID(newID))
                             {
-                                System.out.println("Error: Patient ID '" + newID + "' is already assigned to another patient!");
+                                System.out.println("Patient ID '" + newID + "' has already assigned to another patient, Use another id");
                             }
                             else
                             {
@@ -552,6 +547,7 @@ public class MediCare
                             if (catagoryOption == 1)
                             {
                                 patient.Category = patientCategory.Inpatient;
+                                allocateBed(scanner);
                                 System.out.println("\nUpdate successfully captured.");
                                 break;
                             }
@@ -576,6 +572,7 @@ public class MediCare
                     //IF THE USER ENTERED 0, THE LOOP WILL STOP
                     else if (updateChoice == 0)
                     {
+                        loopCounter=true;
                         break;
                     }
                     //ALLOWS THE USER TO UPDATE AGAIN WITHOUT GOING BACK TO MAIN MANU
@@ -587,7 +584,11 @@ public class MediCare
                         loopCounter = true;
                         System.out.println("\nNew Details:");
                         patient.displayDetails();
-                        System.out.println("\nReturning To Main Menu");
+                        System.out.println("\nReturning To Menu");
+                    }
+                    else if (updatechoice.equalsIgnoreCase("yes"))
+                    {
+                        loopCounter=false;
                     }
                 }
                 break;
@@ -602,29 +603,45 @@ public class MediCare
     //METHOD THAT ALLOWS THE USER TO DELETE A PATIENT OR DISCHARGE A PATIENT
     public static void deleteRecord()
     {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println();
-        System.out.print("Enter the patient's ID to delete: ");
-        String deleteID = scanner.nextLine();
-        boolean delete = false;
-        for (int i = 0; i < patientsRecord.size(); i++)
+        boolean loopControl=false;
+        while(loopControl==false)
         {
-            if (patientsRecord.get(i).patientID.equals(deleteID))
+            Scanner scanner = new Scanner(System.in);
+            System.out.println();
+            System.out.print("Enter the patient's ID to delete: ");
+            String deleteID = scanner.nextLine();
+            boolean delete = false;
+            for (int i = 0; i < patientsRecord.size(); i++)
             {
-                System.out.println("\nPatient with ID '" + deleteID + "' was found!\n");
-                Patient patient = patientsRecord.get(i);
-                patient.displayDetails();
-                //USING .REMOVE TO REMOVE THE PATIENTS'S DETAIL FROM THE ARRAYLIST
-                patientsRecord.remove(i);
-                delete = true;
-                System.out.println("\nPatient record with ID '" + deleteID + "' successfully deleted.");
-                break;
+                if (patientsRecord.get(i).patientID.equals(deleteID))
+                {
+                    System.out.println("\nPatient with ID '" + deleteID + "' was found!\n");
+                    Patient patient = patientsRecord.get(i);
+                    patient.displayDetails();
+                    //USING .REMOVE TO REMOVE THE PATIENTS'S DETAIL FROM THE ARRAYLIST
+                    patientsRecord.remove(i);
+                    delete = true;
+                    System.out.println("\nPatient record with ID '" + deleteID + "' successfully deleted.");
+                    break;
+                }
             }
-        }
-        //IF THE ENTER IF IS NOT FOUND, IT WILL DISPLAY THIS TEXT 
-        if (!delete)
-        {
-            System.out.println("\nPatient with ID '" + deleteID + "' was not found.");
+            //IF THE ENTER IF IS NOT FOUND, IT WILL DISPLAY THIS TEXT 
+            if (!delete)
+            {
+                System.out.println("\nPatient with ID '" + deleteID + "' was not found.");
+            }
+            System.out.print("Do you want to delete again?: ");
+            String deleteChoice=scanner.nextLine();
+            if (deleteChoice.equalsIgnoreCase("no"))
+                {
+                    loopControl = true;
+                    System.out.println("\nReturning To Menu...");
+                    break;
+                }
+            else if(deleteChoice.equalsIgnoreCase("yes"))
+            {
+                loopControl=false;
+            }
         }
     }
     //METHOD THAT DISPLAY ALL THE PATIENTS IN THE SYSTEM 
@@ -655,100 +672,145 @@ public class MediCare
     {
         System.out.println("\nMEDICARE HOSPITAL FULL REPORT");
         System.out.println("\nPATIENT REPORT");
-        if (patientsRecord.isEmpty()) 
+        boolean displayLoop= false;
+        while(displayLoop==false)
         {
-            System.out.println("No patients currently registered.");
-        } 
-        else 
-        {
-            System.out.println("How would you like to sort the patient report?");
-            System.out.println("1: Sort by Surname");
-            System.out.println("2: Sort by Patient ID");
-            System.out.print("Enter choice: ");
-            int sortChoice = scanner.nextInt();
-            scanner.nextLine();
-            //USING BURBLE SORTING 
-            for (int i = 0; i < patientsRecord.size() - 1; i++) 
+            if (patientsRecord.isEmpty()) 
             {
-                for (int j = 0; j < patientsRecord.size() - i - 1; j++) 
+                System.out.println("No patients currently registered.");
+            }    
+            else 
+            {
+                //DISPLAY THE UNSORTED LIST
+                for (int i = 0; i < patientsRecord.size(); i++) 
                 {
-                    boolean swap = false;
-                    if (sortChoice == 2) 
+                    Patient patient = patientsRecord.get(i);
+                    System.out.println("Patient " + (i + 1) + ":");
+                    System.out.println("Surname: "  + patient.patientSurname);
+                    System.out.println("Name: "     + patient.patientName);
+                    System.out.println("ID: "       + patient.patientID);
+                    System.out.println("Category: " + patient.Category);
+                }
+                //ASKS THE USER IF THE PATIENTS SHOULD BE SORTED OR NOT
+                System.out.println("\nHow would you like to sort the patient report?");
+                System.out.println("1: Sort by Surname");
+                System.out.println("2: Sort by Patient ID");
+                System.out.println("3: Not sorted");
+                System.out.print("Enter you choice: ");
+                int sortChoice = scanner.nextInt();
+                scanner.nextLine();
+                //USING BURBLE SORTING 
+                for (int i = 0; i < patientsRecord.size() - 1; i++) 
+                {
+                    for (int j = 0; j < patientsRecord.size() - i - 1; j++) 
                     {
-                        String id1 = patientsRecord.get(j).patientID;
-                        String id2 = patientsRecord.get(j + 1).patientID;
-                        if (id1.compareToIgnoreCase(id2) > 0) 
+                        //SWAP USING PATIENT ID
+                        boolean swaping = false;
+                        if (sortChoice == 2) 
                         {
-                            swap = true;
-                        }
-                    } 
-                    else 
-                    {
-                        String surname1 = patientsRecord.get(j).patientSurname;
-                        String surname2 = patientsRecord.get(j + 1).patientSurname;
-                        if (surname1.compareToIgnoreCase(surname2) > 0) 
+                            String id1 = patientsRecord.get(j).patientID;
+                            String id2 = patientsRecord.get(j + 1).patientID;
+                            if (id1.compareToIgnoreCase(id2) > 0) 
+                            {
+                                swaping = true;
+                            }
+                        } 
+                        //SWAP USING PATIENT SURNAME
+                        else if (sortChoice == 1)
                         {
-                            swap = true;
+                            String surname1 = patientsRecord.get(j).patientSurname;
+                            String surname2 = patientsRecord.get(j + 1).patientSurname;
+                            if (surname1.compareToIgnoreCase(surname2) > 0) 
+                            {
+                                swaping = true;
+                            }
                         }
-                    }
-                    if (swap) 
-                    {
-                        Patient temp = patientsRecord.get(j);
-                        patientsRecord.set(j, patientsRecord.get(j + 1));
-                        patientsRecord.set(j + 1, temp);
+                        if (swaping) 
+                        {
+                            Patient temp = patientsRecord.get(j);
+                            patientsRecord.set(j, patientsRecord.get(j + 1));
+                            patientsRecord.set(j + 1, temp);
+                        }
+                        //CREATE A SPACE AND PRINT THE WAY THE PATIENTS WERE RECORDED
+                        else
+                        {
+                            System.out.println();
+                        }
                     }
                 }
+                //DISPLAYING ALL THE PATIENTS
+                for (int i = 0; i < patientsRecord.size(); i++) 
+                {
+                    Patient patient = patientsRecord.get(i);
+                    System.out.println("Patient " + (i + 1) + ":");
+                    System.out.println("Surname: "  + patient.patientSurname);
+                    System.out.println("Name: "     + patient.patientName);
+                    System.out.println("ID: "       + patient.patientID);
+                    System.out.println("Category: " + patient.Category);
+                }
             }
+            int inpatients = 0;
+            int outpatients = 0;
+            int emergency = 0;
             for (int i = 0; i < patientsRecord.size(); i++) 
             {
                 Patient patient = patientsRecord.get(i);
-                System.out.println("Patient " + (i + 1) + ":");
-                System.out.println("Surname: "  + patient.patientSurname);
-                System.out.println("Name: "     + patient.patientName);
-                System.out.println("ID: "       + patient.patientID);
-                System.out.println("Category: " + patient.Category);
+                if (patient.Category == patientCategory.Inpatient) 
+                {
+                    inpatients++;
+                }    
+                else if (patient.Category == patientCategory.Outpatient) 
+                {
+                    outpatients++;
+                }    
+                else if (patient.Category == patientCategory.Emergency) 
+                {
+                    emergency++;
+                }
+            }
+            //DISPLAYS THE CALCULATED VALUES
+            System.out.println("\nCategory Total:");
+            System.out.println("1: Total Registered Patients : " + patientsRecord.size());
+            System.out.println("2: Inpatients: " + inpatients);
+            System.out.println("3: Outpatients: " + outpatients);
+            System.out.println("4: Emergency: " + emergency);
+            int bedsInUse = 0;
+            for (int i = 0; i < bedStatus.length; i++) 
+            {
+                if (bedStatus[i]) 
+                {
+                    bedsInUse++;
+                }
+            }
+            int totalBeds = bedStatus.length;
+            int bedsAvailable = totalBeds - bedsInUse;
+            double percentage = ((double) bedsInUse / totalBeds) * 100;
+            System.out.println("\nWARD BED REPORT");
+            System.out.println("1: Total Beds : " + totalBeds);
+            System.out.println("2: Beds Occupied : " + bedsInUse);
+            System.out.println("3: Beds Available : " + bedsAvailable);
+            System.out.printf("4: Occupancy Percentage: %.2f%%\n", percentage);
+            boolean noError=false;
+            while(noError==false)
+            {
+                System.out.print("\nDo you want to display the report again?(yes or no): ");
+                String reportChoice=scanner.nextLine();
+                if (reportChoice.equalsIgnoreCase("yes"))
+                {
+                    noError=true;
+                    displayLoop=false;
+                }
+                else if(reportChoice.equalsIgnoreCase("no"))
+                {
+                    noError=true;
+                    displayLoop=true;
+                }
+                else
+                {
+                    noError=false;
+                    System.out.println("Please choose between YES and NO only!");
+                }
             }
         }
-        int inpatients = 0;
-        int outpatients = 0;
-        int emergency = 0;
-        for (int i = 0; i < patientsRecord.size(); i++) 
-        {
-            Patient patient = patientsRecord.get(i);
-            if (patient.Category == patientCategory.Inpatient) 
-            {
-                inpatients++;
-            } 
-            else if (patient.Category == patientCategory.Outpatient) 
-            {
-                outpatients++;
-            } 
-            else if (patient.Category == patientCategory.Emergency) 
-            {
-                emergency++;
-            }
-        }
-        //DISPLAYS THE CALCULATED VALUES
-        System.out.println("\nCategory Total:");
-        System.out.println("1: Total Registered Patients : " + patientsRecord.size());
-        System.out.println("2: Inpatients: " + inpatients);
-        System.out.println("3: Outpatients: " + outpatients);
-        System.out.println("4: Emergency: " + emergency);
-        int bedsInUse = 0;
-        for (int i = 0; i < bedStatus.length; i++) 
-        {
-            if (bedStatus[i]) 
-            {
-                bedsInUse++;
-            }
-        }
-        int totalBeds = bedStatus.length;
-        int bedsAvailable = totalBeds - bedsInUse;
-        double percentage = ((double) bedsInUse / totalBeds) * 100;
-        System.out.println("\n WARD BED REPORT");
-        System.out.println("1: Total Beds : " + totalBeds);
-        System.out.println("2: Beds Occupied : " + bedsInUse);
-        System.out.println("3: Beds Available : " + bedsAvailable);
-        System.out.printf("4: Occupancy Percentage: %.2f%%\n", percentage);
     }
 } 

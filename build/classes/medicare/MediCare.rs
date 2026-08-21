@@ -1,4 +1,0 @@
-medicare.patientCategory
-medicare.Inpatient
-medicare.Patient
-medicare.MediCare

@@ -44,5 +44,10 @@ public class TestRunner {
         System.out.println("  Passed: " + (result.getRunCount() - result.getFailureCount()));
         System.out.println("  Failed: " + result.getFailureCount());
         System.out.println("  Time: " + (endTime - startTime) + "ms");
+
+        // Force process exit with failure code if any test fails
+        if (result.getFailureCount() > 0) {
+            System.exit(1);
+        }
     }
 }

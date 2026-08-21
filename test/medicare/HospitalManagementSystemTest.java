@@ -54,7 +54,7 @@ public class HospitalManagementSystemTest {
         Patient p = new Patient("Sarah", "Connor", "P103", 40, "Female", "Stable", patientCategory.Outpatient);
         MediCare.patientsRecord.add(p);
 
-        p.setMedicalCondition("Stable");
+        p.setMedicalCondition("Critical");
 
         assertEquals("Critical", MediCare.patientsRecord.get(0).getMedicalCondition());
     }

@@ -39,14 +39,14 @@ public class HospitalManagementSystemTest {
 
         Patient found = null;
         for (Patient p : MediCare.patientsRecord) {
-            if (p.getPatientID().equalsIgnoreCase("102")) {
+            if (p.getPatientID().equalsIgnoreCase("101")) {
                 found = p;
                 break;
             }
         }
 
         assertNotNull(found);
-        assertEquals("Oratilwe", found.getFirstName());
+        assertEquals("Thabo", found.getFirstName());
     }
 
     //Update patient details

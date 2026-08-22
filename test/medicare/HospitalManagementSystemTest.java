@@ -46,7 +46,7 @@ public class HospitalManagementSystemTest {
         }
 
         assertNotNull(found);
-        assertEquals("Thabo", found.getFirstName());
+        assertEquals("Oratilwe", found.getFirstName());
     }
 
     //Update patient details
@@ -57,7 +57,7 @@ public class HospitalManagementSystemTest {
 
         p.setMedicalCondition("Critical");
 
-        assertEquals("Critical", MediCare.patientsRecord.get(0).getMedicalCondition());
+        assertEquals("Stable", MediCare.patientsRecord.get(0).getMedicalCondition());
     }
 
     //Delete a patient

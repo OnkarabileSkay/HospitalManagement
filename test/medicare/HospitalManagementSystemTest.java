@@ -19,40 +19,40 @@ public class HospitalManagementSystemTest {
         }
     }
 
-    // 1. Register a patient
+    //Register a patient
     @Test
     public void testRegisterPatient() {
-        Patient p = new Patient("John", "Doe", "100", 30, "Male", "Flu", patientCategory.Outpatient);
+        Patient p = new Patient("Thabo", "Mashobane", "100", 30, "Male", "Flu", patientCategory.Outpatient);
         MediCare.patientsRecord.add(p);
 
         assertEquals(1, MediCare.patientsRecord.size());
         assertEquals("100", MediCare.patientsRecord.get(0).getPatientID());
     }
 
-    // 2. Search for a patient
+    //Search for a patient
     @Test
     public void testSearchPatient() {
-        Patient p1 = new Patient("Alex", "Ray", "P101", 25, "Male", "Fever", patientCategory.Outpatient);
-        Patient p2 = new Patient("Mary", "Jane", "P102", 50, "Female", "Asthma", patientCategory.Outpatient);
+        Patient p1 = new Patient("Thabo", "Mashobane", "101", 25, "Male", "Fever", patientCategory.Outpatient);
+        Patient p2 = new Patient("Oratilwe", "Kobe", "102", 50, "Female", "Asthma", patientCategory.Outpatient);
         MediCare.patientsRecord.add(p1);
         MediCare.patientsRecord.add(p2);
 
         Patient found = null;
         for (Patient p : MediCare.patientsRecord) {
-            if (p.getPatientID().equalsIgnoreCase("P102")) {
+            if (p.getPatientID().equalsIgnoreCase("102")) {
                 found = p;
                 break;
             }
         }
 
         assertNotNull(found);
-        assertEquals("Mary", found.getFirstName());
+        assertEquals("Oratilwe", found.getFirstName());
     }
 
-    // 3. Update patient details
+    //Update patient details
     @Test
     public void testUpdatePatientDetails() {
-        Patient p = new Patient("Sarah", "Connor", "P103", 40, "Female", "Stable", patientCategory.Outpatient);
+        Patient p = new Patient("Onkarabile", "Skhosana", "P103", 21, "Female", "Stable", patientCategory.Outpatient);
         MediCare.patientsRecord.add(p);
 
         p.setMedicalCondition("Critical");
@@ -60,10 +60,10 @@ public class HospitalManagementSystemTest {
         assertEquals("Critical", MediCare.patientsRecord.get(0).getMedicalCondition());
     }
 
-    // 4. Delete a patient
+    //Delete a patient
     @Test
     public void testDeletePatient() {
-        Patient p = new Patient("Mark", "Zucker", "P104", 38, "Male", "Observation", patientCategory.Outpatient);
+        Patient p = new Patient("Mark", "Zucker", "P104", 38, "Male", "Corona", patientCategory.Outpatient);
         MediCare.patientsRecord.add(p);
 
         MediCare.patientsRecord.remove(p);
@@ -71,30 +71,30 @@ public class HospitalManagementSystemTest {
         assertEquals(0, MediCare.patientsRecord.size());
     }
 
-    // 5. Allocate a bed
+    //Allocate a bed
     @Test
     public void testAllocateBed() {
-        Inpatient in = new Inpatient("Jane", "Smith", "P105", 45, "Female", "Fracture", patientCategory.Inpatient, "Ward A", 1);
+        Inpatient in = new Inpatient("Jane", "Smith", "P105", 45, "Female", "Fracture", patientCategory.Inpatient, "Ward 1", 1);
         MediCare.patientsRecord.add(in);
         MediCare.beds[in.getBedNumber() - 1] = true;
 
         assertTrue(MediCare.beds[0]);
     }
 
-    // 6. Release a bed
+    //Release a bed
     @Test
     public void testReleaseBed() {
-        Inpatient in = new Inpatient("Jane", "Smith", "P106", 45, "Female", "Fracture", patientCategory.Inpatient, "Ward A", 1);
+        Inpatient in = new Inpatient("Jane", "Smith", "P106", 45, "Female", "Fracture", patientCategory.Inpatient, "Ward A", 16);
         MediCare.patientsRecord.add(in);
-        MediCare.beds[0] = true;
+        MediCare.beds[15] = true;
 
-        // Release the bed
+        //Release the bed
         MediCare.beds[in.getBedNumber() - 1] = false;
 
-        assertFalse(MediCare.beds[0]);
+        assertFalse(MediCare.beds[15]);
     }
 
-    // 7. Prevent duplicate Patient IDs
+    //Prevent duplicate Patient IDs
     @Test
     public void testPreventDuplicatePatientID() {
         Patient p1 = new Patient("John", "Doe", "P107", 30, "Male", "Flu", patientCategory.Outpatient);
@@ -110,13 +110,13 @@ public class HospitalManagementSystemTest {
             }
         }
 
-        assertTrue("Duplicate ID detected correctly", isDuplicate);
+        assertTrue("A patient with ID '" + newID + "' already exists. Please enter another ID", isDuplicate);
     }
 
-    // 8. Prevent allocating an occupied bed
+    //Prevent allocating a in use bed
     @Test
-    public void testPreventAllocatingOccupiedBed() {
-        MediCare.beds[0] = true; // Bed 1 is already occupied
+    public void testPreventAllocatingInBed() {
+        MediCare.beds[0] = true;
 
         int requestedBed = 1;
         boolean canAllocate = !MediCare.beds[requestedBed - 1];
@@ -124,10 +124,9 @@ public class HospitalManagementSystemTest {
         assertFalse("Cannot allocate bed 1 as it is already occupied", canAllocate);
     }
 
-    // 9. Prevent bed allocation when all beds are occupied
+    //Prevent bed allocation when all beds are occupied
     @Test
     public void testPreventBedAllocationWhenAllBedsOccupied() {
-        // Mark all beds as occupied
         for (int i = 0; i < MediCare.beds.length; i++) {
             MediCare.beds[i] = true;
         }
@@ -143,7 +142,7 @@ public class HospitalManagementSystemTest {
         assertFalse("No beds available when all are occupied", hasAvailableBed);
     }
 
-    // 10. Sort patients by surname or Patient ID
+    //Sort patients by surname or Patient ID
     @Test
     public void testSortPatientsBySurnameOrID() {
         Patient p1 = new Patient("Zack", "Zulu", "P110", 30, "Male", "Flu", patientCategory.Outpatient);
@@ -151,7 +150,6 @@ public class HospitalManagementSystemTest {
         MediCare.patientsRecord.add(p1);
         MediCare.patientsRecord.add(p2);
 
-        // Sort by Surname
         Collections.sort(MediCare.patientsRecord, Comparator.comparing(Patient::getSurname));
 
         assertEquals("Apple", MediCare.patientsRecord.get(0).getSurname());

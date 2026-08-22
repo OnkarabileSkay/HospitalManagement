@@ -22,11 +22,11 @@ public class HospitalManagementSystemTest {
     // 1. Register a patient
     @Test
     public void testRegisterPatient() {
-        Patient p = new Patient("John", "Doe", "P100", 30, "Male", "Flu", patientCategory.Outpatient);
+        Patient p = new Patient("John", "Doe", "100", 30, "Male", "Flu", patientCategory.Outpatient);
         MediCare.patientsRecord.add(p);
 
         assertEquals(1, MediCare.patientsRecord.size());
-        assertEquals("P100", MediCare.patientsRecord.get(0).getPatientID());
+        assertEquals("1001", MediCare.patientsRecord.get(0).getPatientID());
     }
 
     // 2. Search for a patient

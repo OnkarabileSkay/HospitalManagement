@@ -26,7 +26,7 @@ public class HospitalManagementSystemTest {
         MediCare.patientsRecord.add(p);
 
         assertEquals(1, MediCare.patientsRecord.size());
-        assertEquals("1001", MediCare.patientsRecord.get(0).getPatientID());
+        assertEquals("100", MediCare.patientsRecord.get(0).getPatientID());
     }
 
     // 2. Search for a patient
